@@ -114,19 +114,35 @@ cdvPluginPostBuildExtras.add({
     }
 
     android {
-        if (xwalk64bit != null) {
-            productFlavors {
-                x86_64 {
-                    versionCode defaultConfig.versionCode + 6
-                    ndk {
-                       abiFilters "x86_64", ""
-                    }
+        productFlavors {
+            armeabi {
+                versionCode defaultConfig.versionCode*10 + 1
+                ndk {
+                    abiFilters = ["armeabi"]
                 }
-                arm64 {
-                    versionCode defaultConfig.versionCode + 9
-                    ndk {
-                        abiFilters "arm64-v8a", ""
-                    }
+            }
+            armv7 {
+                versionCode defaultConfig.versionCode*10 + 2
+                ndk {
+                    abiFilters = ["armeabi-v7a"]
+                }
+            }
+            arm64 {
+                versionCode defaultConfig.versionCode*10 + 3
+                ndk {
+                    abiFilters = ["arm64-v8a"]
+                }
+            }
+            x86 {
+                versionCode defaultConfig.versionCode*10 + 4
+                ndk {
+                    abiFilters = ["x86"]
+                }
+            }
+            x86_64 {
+                versionCode defaultConfig.versionCode*10 + 5
+                ndk {
+                    abiFilters = ["x86_64"]
                 }
             }
         }
@@ -152,13 +168,18 @@ cdvPluginPostBuildExtras.add({
         }
         xwalkSpec = DEFAULT_GROUP_ID + artifactid + xwalkSpec
     }
+    def xwalkSpec64 = xwalkSpec
     if (xwalk64bit != null) {
-        xwalkSpec = xwalkSpec + BIT_64
+        xwalkSpec64 = xwalkSpec + BIT_64
     }
-    println xwalkSpec
+    println xwalkSpec64
 
     dependencies {
-        implementation xwalkSpec
+        armeabiImplementation xwalkSpec
+        armv7Implementation xwalkSpec
+        x86Implementation xwalkSpec
+        arm64Implementation xwalkSpec64
+        x86_64Implementation xwalkSpec64
     }
 
     if (file('assets/xwalk-command-line').exists()) {
